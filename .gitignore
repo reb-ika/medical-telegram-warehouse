@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+
+# Secrets — NEVER commit these
+.env
+
+# Telegram session files (contain your login session)
+*.session
+*.session-journal
+
+# Raw data (too large for GitHub)
+data/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+logs/
+
+# dbt
+medical_warehouse/target/
+medical_warehouse/dbt_packages/
+medical_warehouse/logs/
+
+# VS Code
+.vscode/
