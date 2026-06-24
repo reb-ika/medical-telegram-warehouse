@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: dim_channels
+    description: "One row per Telegram channel with metadata and activity stats"
+    columns:
+      - name: channel_key
+        description: "Surrogate primary key"
+        data_tests:
+          - unique
+          - not_null
+      - name: channel_name
+        description: "Telegram channel username"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_dates
+    description: "One row per unique date in the dataset"
+    columns:
+      - name: date_key
+        description: "Integer date key in YYYYMMDD format"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: fct_messages
+    description: "One row per Telegram message — central fact table"
+    columns:
+      - name: message_id
+        description: "Telegram message ID"
+        data_tests:
+          - not_null
+      - name: channel_key
+        description: "Foreign key to dim_channels"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_channels')
+              field: channel_key
+      - name: date_key
+        description: "Foreign key to dim_dates"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
