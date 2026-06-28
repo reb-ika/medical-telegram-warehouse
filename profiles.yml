@@ -1,0 +1,24 @@
+# profiles.yml
+# -----------
+# dbt connection profile for the medical_warehouse project.
+# 
+# SETUP INSTRUCTIONS:
+#   1. Copy this file to C:\Users\<your_username>\.dbt\profiles.yml
+#   2. Replace the password field with your actual PostgreSQL password
+#   3. Adjust host/port if your PostgreSQL runs on different settings
+#
+# Default port for PostgreSQL is 5432.
+# This project uses 5433 (PostgreSQL 18 installation default).
+
+medical_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      port: 5433
+      user: postgres
+      password: "your_postgres_password_here"
+      dbname: medical_warehouse
+      schema: dev
+      threads: 1
