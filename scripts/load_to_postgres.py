@@ -104,30 +104,24 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 # ─── Load DataFrame to PostgreSQL ────────────────────────────────────────────
 def load_to_postgres(df: pd.DataFrame, engine):
-    """
-    Creates a 'raw' schema in PostgreSQL (if it doesn't exist),
-    then writes the DataFrame to raw.telegram_messages.
-
-    if_exists='replace' means: drop and recreate the table each time.
-    This is fine for our raw layer — we always reload from the data lake.
-    """
     with engine.connect() as conn:
         # Create the raw schema if it doesn't exist
         conn.execute(text("CREATE SCHEMA IF NOT EXISTS raw;"))
+        # DROP with CASCADE handles the dbt view dependency
+        conn.execute(text("DROP TABLE IF EXISTS raw.telegram_messages CASCADE;"))
         conn.commit()
         logger.info("Schema 'raw' ready")
 
-    # Write to PostgreSQL — this creates the table automatically
+    # Write to PostgreSQL
     df.to_sql(
         name="telegram_messages",
         schema="raw",
         con=engine,
-        if_exists="replace",   # replace table on each run
-        index=False,           # don't write DataFrame index as a column
-        chunksize=500,         # write 500 rows at a time (RAM-friendly)
+        if_exists="append",    # table already dropped above, so append is safe
+        index=False,
+        chunksize=500,
     )
-    logger.info(f"Loaded {len(df)} records into raw.telegram_messages")
-
+    logger.info(f"Loaded {len(df)} rows into raw.telegram_messages")
 
 # ─── Main ────────────────────────────────────────────────────────────────────
 def main():

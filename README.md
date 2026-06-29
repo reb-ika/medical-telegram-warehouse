@@ -8,7 +8,7 @@ with YOLOv8 object detection, and exposes analytics through a FastAPI service.
 **Built for:** 10 Academy Kifiya AI Training Programme — Week 8
 
 **Author:** Rebika Woldeyesus
-
+N
 
 ---
 
